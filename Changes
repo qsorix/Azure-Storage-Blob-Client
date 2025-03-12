@@ -1,3 +1,7 @@
+0.06
+  - Add 'DownloadBlob' API call.
+  - Support custom base URLs, enabling using the dockerized Azurite.
+
 0.05
   - Add POD documentation.
   - Add 'Contributors && Kudos' section to documentation.

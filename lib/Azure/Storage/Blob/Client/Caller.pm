@@ -43,7 +43,8 @@ sub _prepare_request {
     $call_object->operation ne 'DeleteBlob' and
     $call_object->operation ne 'GetBlobProperties' and
     $call_object->operation ne 'ListBlobs' and
-    $call_object->operation ne 'PutBlob'
+    $call_object->operation ne 'PutBlob' and
+    $call_object->operation ne 'DownloadBlob'
   ) {
     die 'Unimplemented.';
   }

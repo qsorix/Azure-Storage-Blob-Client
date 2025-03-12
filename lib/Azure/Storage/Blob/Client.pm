@@ -6,6 +6,7 @@ use Azure::Storage::Blob::Client::Call::DeleteBlob;
 use Azure::Storage::Blob::Client::Call::GetBlobProperties;
 use Azure::Storage::Blob::Client::Call::ListBlobs;
 use Azure::Storage::Blob::Client::Call::PutBlob;
+use Azure::Storage::Blob::Client::Call::DownloadBlob;
 
 our $VERSION = 0.05;
 
@@ -115,6 +116,21 @@ sub PutBlob {
   );
 }
 
+sub DownloadBlob {
+  my ($self, %params) = @_;
+  my $call_object = Azure::Storage::Blob::Client::Call::DownloadBlob->new(
+    account_name => $self->account_name,
+    api_version => $self->api_version,
+    endpoint_base => $self->blob_endpoint,
+    %params,
+  );
+  return $self->caller->request(
+    $self->account_name,
+    $self->account_key,
+    $call_object,
+  );
+}
+
 __PACKAGE__->meta->make_immutable();
 
 1;
@@ -151,6 +167,12 @@ Azure::Storage::Blob::Client - Azure Storage Services Blob API client
     blobI<name => $blob>name,
     content => $content,
   );
+
+  my $http_response = $client->DownloadBlob(
+    container => $container,
+    blob_name => $blob_name,
+  );
+
 
   $client->DeleteBlob(
     container => $containerI<name,
@@ -239,6 +261,18 @@ Creates a new block to be committed as part of a block blob.
    blob_name => $blob_name,
    content => $content,
  );
+
+
+
+=head3 Download Blob
+
+Downloads a blob returning the HTTP response.
+
+ my $response = $client->DownloadBlob(
+   container => $container_name,
+   blob_name => $blob_name,
+ );
+ my $content = $response->content
 
 
 
