@@ -19,12 +19,20 @@ has caller => (
 has account_name => (is => 'ro', isa => 'Str', required => 1);
 has account_key => (is => 'ro', isa => 'Str', required => 1);
 has api_version => (is => 'ro', isa => 'Str', default => '2018-03-28');
+has blob_endpoint => (is => 'ro', isa => 'Str', default => sub {
+  my $self = shift;
+  return sprintf(
+    'https://%s.blob.core.windows.net',
+    $self->account_name,
+  );
+});
 
 sub DeleteBlob {
   my ($self, %params) = @_;
   my $call_object = Azure::Storage::Blob::Client::Call::DeleteBlob->new(
     account_name => $self->account_name,
     api_version => $self->api_version,
+    endpoint_base => $self->blob_endpoint,
     %params,
   );
   return $self->caller->request(
@@ -39,6 +47,7 @@ sub GetBlobProperties {
   my $call_object = Azure::Storage::Blob::Client::Call::GetBlobProperties->new(
     account_name => $self->account_name,
     api_version => $self->api_version,
+    endpoint_base => $self->blob_endpoint,
     %params,
   );
   return $self->caller->request(
@@ -53,6 +62,7 @@ sub ListBlobs {
   my $call_object = Azure::Storage::Blob::Client::Call::ListBlobs->new(
     account_name => $self->account_name,
     api_version => $self->api_version,
+    endpoint_base => $self->blob_endpoint,
     %params,
   );
 
@@ -95,6 +105,7 @@ sub PutBlob {
   my $call_object = Azure::Storage::Blob::Client::Call::PutBlob->new(
     account_name => $self->account_name,
     api_version => $self->api_version,
+    endpoint_base => $self->blob_endpoint,
     %params,
   );
   return $self->caller->request(
@@ -184,6 +195,14 @@ Returns a new instance of Azure::Storage::Blob::Client.
    api_version => '2018-03-28',
  );
 
+To run it against a local instances of Azurite, use:
+
+ my $client = Azure::Storage::Blob::Client->new(
+   blob_endpoint => "http://127.0.0.1:10000/$storage_account_name",
+   account_name => $storage_account_name,
+   account_key => $storage_account_key,
+   api_version => '2018-03-28',
+ );
 
 
 =head3 ListBlobs

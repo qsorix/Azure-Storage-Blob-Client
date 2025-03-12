@@ -34,9 +34,9 @@ Feature 'Azure Storage Account API Exceptions handling' => sub {
 
     Given 'a GetBlobProperties call object' => sub {
       $call_object = Azure::Storage::Blob::Client::Call::GetBlobProperties->new(
+        endpoint_base => 'https://myaccount.blob.core.windows.net',
         container => 'mycontainer',
         account_name => $account_name,
-        account_key => $account_key,
         api_version => $api_version,
         blob_name => 'myblob',
       );
@@ -68,9 +68,9 @@ Feature 'Azure Storage Account API Exceptions handling' => sub {
 
     Given 'a GetBlobProperties call object' => sub {
       $call_object = Azure::Storage::Blob::Client::Call::GetBlobProperties->new(
+        endpoint_base => 'https://myaccount.blob.core.windows.net',
         container => 'mycontainer',
         account_name => $account_name,
-        account_key => $account_key,
         api_version => $api_version,
         blob_name => 'myblob',
       );
@@ -102,10 +102,10 @@ Feature 'Azure Storage Account API Exceptions handling' => sub {
 
     Given 'a GetBlobProperties call object' => sub {
       $call_object = Azure::Storage::Blob::Client::Call::GetBlobProperties->new(
+        endpoint_base => 'https://myaccount.blob.core.windows.net',
         container => 'mycontainer',
         account_name => $account_name,
         api_version => $api_version,
-        account_key => $account_key,
         blob_name => 'myblob',
       );
     };
@@ -135,9 +135,9 @@ Feature 'Azure Storage Account API Exceptions handling' => sub {
 
     Given 'a GetBlobProperties call object' => sub {
       $call_object = Azure::Storage::Blob::Client::Call::GetBlobProperties->new(
+        endpoint_base => 'https://myaccount.blob.core.windows.net',
         container => 'mycontainer',
         account_name => $account_name,
-        account_key => $account_key,
         api_version => $api_version,
         blob_name => 'myblob',
       );
@@ -168,9 +168,9 @@ Feature 'Azure Storage Account API Exceptions handling' => sub {
 
     Given 'a GetBlobProperties call object' => sub {
       $call_object = Azure::Storage::Blob::Client::Call::GetBlobProperties->new(
+        endpoint_base => 'https://myaccount.blob.core.windows.net',
         container => 'mycontainer',
         account_name => $account_name,
-        account_key => $account_key,
         api_version => $api_version,
         blob_name => 'myblob',
       );
@@ -201,9 +201,9 @@ Feature 'Azure Storage Account API Exceptions handling' => sub {
 
     Given 'a GetBlobProperties call object' => sub {
       $call_object = Azure::Storage::Blob::Client::Call::GetBlobProperties->new(
+        endpoint_base => 'https://myaccount.blob.core.windows.net',
         container => 'mycontainer',
         account_name => $account_name,
-        account_key => $account_key,
         api_version => $api_version,
         blob_name => 'myblob',
       );
@@ -234,9 +234,9 @@ Feature 'Azure Storage Account API Exceptions handling' => sub {
 
     Given 'a GetBlobProperties call object' => sub {
       $call_object = Azure::Storage::Blob::Client::Call::GetBlobProperties->new(
+        endpoint_base => 'https://myaccount.blob.core.windows.net',
         container => 'mycontainer',
         account_name => $account_name,
-        account_key => $account_key,
         api_version => $api_version,
         blob_name => 'myblob',
       );

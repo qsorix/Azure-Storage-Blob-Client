@@ -3,11 +3,12 @@ use Moose;
 use Azure::Storage::Blob::Client::Meta::Attribute::Custom::Trait::HeaderParameter;
 
 has operation => (is => 'ro', init_arg => undef, default => 'GetBlobProperties');
+has endpoint_base => (is => 'ro', isa => 'Str', required => 1);
 has endpoint => (is => 'ro', init_arg => undef, lazy => 1, default => sub {
   my $self = shift;
   return sprintf(
-    'https://%s.blob.core.windows.net/%s/%s',
-    $self->account_name,
+    '%s/%s/%s',
+    $self->endpoint_base,
     $self->container,
     $self->blob_name,
   );
