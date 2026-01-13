@@ -1,5 +1,4 @@
-FROM debian:stretch-slim
-MAINTAINER devel@capside.com
+FROM debian:stable-slim
 
 RUN export DEBIAN_FRONTEND=noninteractive
 
