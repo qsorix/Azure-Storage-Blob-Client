@@ -1,6 +1,6 @@
 # ABSTRACT: Azure Storage Blob API client
 package Azure::Storage::Blob::Client;
-use Moose;
+use Moo;
 use Azure::Storage::Blob::Client::Caller;
 use Azure::Storage::Blob::Client::Call::DeleteBlob;
 use Azure::Storage::Blob::Client::Call::GetBlobProperties;
@@ -17,10 +17,10 @@ has caller => (
     return Azure::Storage::Blob::Client::Caller->new();
   },
 );
-has account_name => (is => 'ro', isa => 'Str', required => 1);
-has account_key => (is => 'ro', isa => 'Str', required => 1);
-has api_version => (is => 'ro', isa => 'Str', default => '2018-03-28');
-has blob_endpoint => (is => 'ro', isa => 'Str', default => sub {
+has account_name => (is => 'ro', required => 1);
+has account_key => (is => 'ro', required => 1);
+has api_version => (is => 'ro', default => '2018-03-28');
+has blob_endpoint => (is => 'ro', default => sub {
   my $self = shift;
   return sprintf(
     'https://%s.blob.core.windows.net',
@@ -131,8 +131,6 @@ sub DownloadBlob {
   );
 }
 
-__PACKAGE__->meta->make_immutable();
-
 1;
 
 =head1 NAME
@@ -210,7 +208,7 @@ PRs contributing the implementation of not-yet-supported API calls are more than
 =head3 Constructor
 
 Returns a new instance of Azure::Storage::Blob::Client.
- 
+
  my $client = Azure::Storage::Blob::Client->new(
    account_name => $storage_account_name,
    account_key => $storage_account_key,
@@ -230,7 +228,7 @@ To run it against a local instances of Azurite, use:
 =head3 ListBlobs
 
 Lists all of the blobs in a container.
- 
+
  my $blobs = $client->ListBlobs(
    container => $container,
    prefix => $blob_prefix,
@@ -243,7 +241,7 @@ B<autoI<retrieve>paginated_results>: When enabled, the client will transparently
 =head3 GetBlobProperties
 
 Returns all system properties and user-defined metadata on the blob.
- 
+
  my $blob_properties = $client->GetBlobProperties(
    container => $container_name,
    blob_name => $blob_name,
@@ -254,7 +252,7 @@ Returns all system properties and user-defined metadata on the blob.
 =head3 PutBlob
 
 Creates a new block to be committed as part of a block blob.
- 
+
  $client->PutBlob(
    container => $container_name,
    blob_type => 'BlockBlob',
@@ -279,7 +277,7 @@ Downloads a blob returning the HTTP response.
 =head3 Delete Blob
 
 Marks a blob for deletion.
- 
+
  $client->DeleteBlob(
    container => $container_name,
    blob_name => $blob_name,
@@ -295,7 +293,7 @@ Marks a blob for deletion.
 
 =head1 AUTHOR
 
- 
+
  Oriol Soriano
  oriol.soriano@capside.com
 

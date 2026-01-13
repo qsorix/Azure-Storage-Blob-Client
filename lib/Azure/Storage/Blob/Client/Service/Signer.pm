@@ -1,5 +1,5 @@
 package Azure::Storage::Blob::Client::Service::Signer;
-use Moose;
+use Moo;
 use Digest::SHA qw(hmac_sha256_base64);
 use MIME::Base64;
 
@@ -55,7 +55,5 @@ sub _canonicalized_resource_string {
       keys %query_form
     );
 }
-
-__PACKAGE__->meta->make_immutable();
 
 1;

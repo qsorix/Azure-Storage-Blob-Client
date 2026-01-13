@@ -1,11 +1,9 @@
 package Azure::Storage::Blob::Client::Call::DownloadBlob;
-use Moose;
-use Azure::Storage::Blob::Client::Meta::Attribute::Custom::Trait::URIParameter;
-use Azure::Storage::Blob::Client::Meta::Attribute::Custom::Trait::HeaderParameter;
+use Moo;
 use XML::LibXML;
 
 has operation => (is => 'ro', init_arg => undef, default => 'DownloadBlob');
-has endpoint_base => (is => 'ro', isa => 'Str', required => 1);
+has endpoint_base => (is => 'ro', required => 1);
 has endpoint => (is => 'ro', init_arg => undef, lazy => 1, default => sub {
   my $self = shift;
   return sprintf(
@@ -19,11 +17,30 @@ has method => (is => 'ro', init_arg => undef, default => 'GET');
 
 with 'Azure::Storage::Blob::Client::Call';
 
-has account_name => (is => 'ro', isa => 'Str', required => 1);
-has api_version => (is => 'ro', isa => 'Str', traits => ['HeaderParameter'], header_name => 'x-ms-version', required => 1);
-has if_none_match => (is => 'ro', isa => 'Maybe[Str]', traits => ['HeaderParameter'], header_name => 'If-None-Match');
-has container => (is => 'ro', isa => 'Str', required => 1);
-has blob_name => (is => 'ro', isa => 'Str', required => 1);
+has account_name => (is => 'ro', required => 1);
+has api_version => (is => 'ro', required => 1);
+has if_none_match => (is => 'ro', required => 0);
+has container => (is => 'ro', required => 1);
+has blob_name => (is => 'ro', required => 1);
+
+sub serialize_uri_parameters {
+  my $self = shift;
+  return {};
+}
+
+sub serialize_header_parameters {
+  my $self = shift;
+  my %headers = (
+    'x-ms-version' => $self->api_version,
+  );
+  $headers{'If-None-Match'} = $self->if_none_match if defined $self->if_none_match;
+  return \%headers;
+}
+
+sub serialize_body_parameters {
+  my $self = shift;
+  return {};
+}
 
 sub parse_response {
   my ($self, $response) = @_;
@@ -31,7 +48,5 @@ sub parse_response {
   # needs to have access to headers and the status code.
   return $response;
 }
-
-__PACKAGE__->meta->make_immutable();
 
 1;
