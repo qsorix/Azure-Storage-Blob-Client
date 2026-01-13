@@ -1,9 +1,10 @@
-package Azure::Storage::Blob::Client::Call::PutBlob;
+package Azure::Storage::Blob::Client::Call::DownloadBlob;
 use Moose;
-use Azure::Storage::Blob::Client::Meta::Attribute::Custom::Trait::BodyParameter;
+use Azure::Storage::Blob::Client::Meta::Attribute::Custom::Trait::URIParameter;
 use Azure::Storage::Blob::Client::Meta::Attribute::Custom::Trait::HeaderParameter;
+use XML::LibXML;
 
-has operation => (is => 'ro', init_arg => undef, default => 'PutBlob');
+has operation => (is => 'ro', init_arg => undef, default => 'DownloadBlob');
 has endpoint_base => (is => 'ro', isa => 'Str', required => 1);
 has endpoint => (is => 'ro', init_arg => undef, lazy => 1, default => sub {
   my $self = shift;
@@ -14,19 +15,20 @@ has endpoint => (is => 'ro', init_arg => undef, lazy => 1, default => sub {
     $self->blob_name,
   );
 });
-has method => (is => 'ro', init_arg => undef, default => 'PUT');
+has method => (is => 'ro', init_arg => undef, default => 'GET');
 
 with 'Azure::Storage::Blob::Client::Call';
 
 has account_name => (is => 'ro', isa => 'Str', required => 1);
 has api_version => (is => 'ro', isa => 'Str', traits => ['HeaderParameter'], header_name => 'x-ms-version', required => 1);
+has if_none_match => (is => 'ro', isa => 'Maybe[Str]', traits => ['HeaderParameter'], header_name => 'If-None-Match');
 has container => (is => 'ro', isa => 'Str', required => 1);
 has blob_name => (is => 'ro', isa => 'Str', required => 1);
-has blob_type => (is => 'ro', isa => 'Str', traits => ['HeaderParameter'], header_name => 'x-ms-blob-type', required => 1);
-has content => (is => 'ro', isa => 'Str', traits => ['BodyParameter'], required => 1);
 
 sub parse_response {
   my ($self, $response) = @_;
+  # Download returns the whole HTTP::Response because to use etags the caller
+  # needs to have access to headers and the status code.
   return $response;
 }
 

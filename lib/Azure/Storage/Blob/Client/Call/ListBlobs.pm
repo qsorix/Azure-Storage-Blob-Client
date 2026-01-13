@@ -5,11 +5,12 @@ use Azure::Storage::Blob::Client::Meta::Attribute::Custom::Trait::HeaderParamete
 use XML::LibXML;
 
 has operation => (is => 'ro', init_arg => undef, default => 'ListBlobs');
+has endpoint_base => (is => 'ro', isa => 'Str', required => 1);
 has endpoint => (is => 'ro', init_arg => undef, lazy => 1, default => sub {
   my $self = shift;
   return sprintf(
-    'https://%s.blob.core.windows.net/%s?restype=container&comp=list',
-    $self->account_name,
+    '%s/%s?restype=container&comp=list',
+    $self->endpoint_base,
     $self->container,
   );
 });
