@@ -8,7 +8,7 @@ requires 'HTTP::Response';
 requires 'HTTP::Tiny';
 requires 'LWP::UserAgent';
 requires 'MIME::Base64';
-requires 'Moose';
+requires 'Moo';
 requires 'Throwable::Error';
 requires 'XML::LibXML';
 

@@ -18,10 +18,7 @@ Feature 'Azure Storage Account API Exceptions handling' => sub {
 
   before each => sub {
     $ua_mock = mock();
-    $signer_mock = stub(
-      isa => 'Azure::Storage::Blob::Client::Service::Signer',
-      calculate_signature => 'myrequestsignature=',
-    );
+    $signer_mock = stub(calculate_signature => 'myrequestsignature=');
 
     $caller = Azure::Storage::Blob::Client::Caller->new(
       user_agent => $ua_mock,

@@ -1,5 +1,5 @@
 package Azure::Storage::Blob::Client::Caller;
-use Moose;
+use Moo;
 use Data::Dumper;
 use LWP::UserAgent;
 use HTTP::Tiny;
@@ -21,7 +21,6 @@ has user_agent => (
 
 has signer => (
   is => 'ro',
-  isa => 'Azure::Storage::Blob::Client::Service::Signer',
   lazy => 1,
   default => sub { Azure::Storage::Blob::Client::Service::Signer->new() },
 );
@@ -116,7 +115,5 @@ sub _sign_request {
     ),
   );
 }
-
-__PACKAGE__->meta->make_immutable();
 
 1;

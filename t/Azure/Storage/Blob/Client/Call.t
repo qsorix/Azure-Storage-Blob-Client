@@ -205,81 +205,131 @@ Feature 'serialize_body_parameters' => sub {
 };
 
 package Azure::Storage::Blob::Client::Test::CallClassWithNoParameters {
-  use Moose;
+  use Moo;
   with 'Azure::Storage::Blob::Client::Call';
 
-  has att1 => (is => 'ro', isa => 'Any', required => 1);
-  has att2 => (is => 'ro', isa => 'Any', required => 1);
-  has att3 => (is => 'ro', isa => 'Any', required => 1);
+  has att1 => (is => 'ro', required => 1);
+  has att2 => (is => 'ro', required => 1);
+  has att3 => (is => 'ro', required => 1);
 
   # required by Call role
   sub operation {}
   sub method {}
   sub endpoint {}
+
+  sub serialize_uri_parameters { return {}; }
+  sub serialize_header_parameters { return {}; }
+  sub serialize_body_parameters { return {}; }
 };
 
 package Azure::Storage::Blob::Client::Test::CallClassWithURIParameters {
-  use Moose;
-  use Azure::Storage::Blob::Client::Meta::Attribute::Custom::Trait::URIParameter;
+  use Moo;
   with 'Azure::Storage::Blob::Client::Call';
 
-  has att1 => (is => 'ro', isa => 'Any', required => 1);
-  has att2 => (is => 'ro', isa => 'Any', traits => ['URIParameter'], required => 1);
-  has att3 => (is => 'ro', isa => 'Any', traits => ['URIParameter'], required => 1);
+  has att1 => (is => 'ro', required => 1);
+  has att2 => (is => 'ro', required => 1);
+  has att3 => (is => 'ro', required => 1);
 
   # required by Call role
   sub operation {}
   sub method {}
   sub endpoint {}
+
+  sub serialize_uri_parameters {
+    my $self = shift;
+    return {
+      att2 => $self->att2,
+      att3 => $self->att3,
+    };
+  }
+  sub serialize_header_parameters { return {}; }
+  sub serialize_body_parameters { return {}; }
 };
 
 package Azure::Storage::Blob::Client::Test::CallClassWithHeaderParameters {
-  use Moose;
-  use Azure::Storage::Blob::Client::Meta::Attribute::Custom::Trait::HeaderParameter;
+  use Moo;
   with 'Azure::Storage::Blob::Client::Call';
 
-  has att1 => (is => 'ro', isa => 'Any', required => 1);
-  has att2 => (is => 'ro', isa => 'Any', traits => ['HeaderParameter'], header_name => 'h2', required => 1);
-  has att3 => (is => 'ro', isa => 'Any', traits => ['HeaderParameter'], header_name => 'h3', required => 1);
+  has att1 => (is => 'ro', required => 1);
+  has att2 => (is => 'ro', required => 1);
+  has att3 => (is => 'ro', required => 1);
 
   # required by Call role
   sub operation {}
   sub method {}
   sub endpoint {}
+
+  sub serialize_uri_parameters { return {}; }
+  sub serialize_header_parameters {
+    my $self = shift;
+    return {
+      h2 => $self->att2,
+      h3 => $self->att3,
+    };
+  }
+  sub serialize_body_parameters { return {}; }
 };
 
 package Azure::Storage::Blob::Client::Test::CallClassWithBodyParameters {
-  use Moose;
-  use Azure::Storage::Blob::Client::Meta::Attribute::Custom::Trait::BodyParameter;
+  use Moo;
   with 'Azure::Storage::Blob::Client::Call';
 
-  has att1 => (is => 'ro', isa => 'Any', required => 1);
-  has att2 => (is => 'ro', isa => 'Any', traits => ['BodyParameter'], required => 1);
-  has att3 => (is => 'ro', isa => 'Any', traits => ['BodyParameter'], required => 1);
+  has att1 => (is => 'ro', required => 1);
+  has att2 => (is => 'ro', required => 1);
+  has att3 => (is => 'ro', required => 1);
 
   # required by Call role
   sub operation {}
   sub method {}
   sub endpoint {}
+
+  sub serialize_uri_parameters { return {}; }
+  sub serialize_header_parameters { return {}; }
+  sub serialize_body_parameters {
+    my $self = shift;
+    return {
+      att2 => $self->att2,
+      att3 => $self->att3,
+    };
+  }
 };
 
 package Azure::Storage::Blob::Client::Test::CallClassWithAllParameters {
-  use Moose;
-  use Azure::Storage::Blob::Client::Meta::Attribute::Custom::Trait::URIParameter;
-  use Azure::Storage::Blob::Client::Meta::Attribute::Custom::Trait::HeaderParameter;
-  use Azure::Storage::Blob::Client::Meta::Attribute::Custom::Trait::BodyParameter;
+  use Moo;
   with 'Azure::Storage::Blob::Client::Call';
 
-  has att1 => (is => 'ro', traits => ['URIParameter'], required => 1);
-  has att2 => (is => 'ro', traits => ['HeaderParameter'], header_name => 'h2', required => 1);
-  has att3 => (is => 'ro', traits => ['BodyParameter'], required => 1);
-  has att4 => (is => 'ro', traits => ['URIParameter', 'HeaderParameter', 'BodyParameter'], header_name => 'h4', required => 1);
+  has att1 => (is => 'ro', required => 1);
+  has att2 => (is => 'ro', required => 1);
+  has att3 => (is => 'ro', required => 1);
+  has att4 => (is => 'ro', required => 1);
   has att5 => (is => 'ro', required => 1);
 
   # required by Call role
   sub operation {}
   sub method {}
   sub endpoint {}
+
+  sub serialize_uri_parameters {
+    my $self = shift;
+    return {
+      att1 => $self->att1,
+      att4 => $self->att4,
+    };
+  }
+  sub serialize_header_parameters {
+    my $self = shift;
+    return {
+      h2 => $self->att2,
+      h4 => $self->att4,
+    };
+  }
+  sub serialize_body_parameters {
+    my $self = shift;
+    return {
+      att3 => $self->att3,
+      att4 => $self->att4,
+    };
+  }
 };
 
 runtests unless caller;

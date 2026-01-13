@@ -1,10 +1,9 @@
 package Azure::Storage::Blob::Client::Call::DeleteBlob;
-use Moose;
+use Moo;
 use Azure::Storage::Blob::Client::Exception;
-use Azure::Storage::Blob::Client::Meta::Attribute::Custom::Trait::HeaderParameter;
 
 has operation => (is => 'ro', init_arg => undef, default => 'DeleteBlob');
-has endpoint_base => (is => 'ro', isa => 'Str', required => 1);
+has endpoint_base => (is => 'ro', required => 1);
 has endpoint => (is => 'ro', init_arg => undef, lazy => 1, default => sub {
   my $self = shift;
   return sprintf(
@@ -18,11 +17,11 @@ has method => (is => 'ro', init_arg => undef, default => 'DELETE');
 
 with 'Azure::Storage::Blob::Client::Call';
 
-has account_name => (is => 'ro', isa => 'Str', required => 1);
-has api_version => (is => 'ro', isa => 'Str', traits => ['HeaderParameter'], header_name => 'x-ms-version', required => 1);
-has container => (is => 'ro', isa => 'Str', required => 1);
-has blob_name => (is => 'ro', isa => 'Str', required => 1);
-has delete_snapshots => (is => 'ro', isa => 'Str', traits => ['HeaderParameter'], header_name => 'x-ms-delete-snapshots');
+has account_name => (is => 'ro', required => 1);
+has api_version => (is => 'ro', required => 1);
+has container => (is => 'ro', required => 1);
+has blob_name => (is => 'ro', required => 1);
+has delete_snapshots => (is => 'ro');
 
 sub BUILD {
   my $self = shift;
@@ -36,11 +35,28 @@ sub BUILD {
   }
 }
 
+sub serialize_uri_parameters {
+  my $self = shift;
+  return {};
+}
+
+sub serialize_header_parameters {
+  my $self = shift;
+  my %headers = (
+    'x-ms-version' => $self->api_version,
+  );
+  $headers{'x-ms-delete-snapshots'} = $self->delete_snapshots if defined $self->delete_snapshots;
+  return \%headers;
+}
+
+sub serialize_body_parameters {
+  my $self = shift;
+  return {};
+}
+
 sub parse_response {
   my ($self, $response) = @_;
   return $response;
 }
-
-__PACKAGE__->meta->make_immutable();
 
 1;

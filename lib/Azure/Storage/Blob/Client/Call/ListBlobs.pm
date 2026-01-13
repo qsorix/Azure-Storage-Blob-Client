@@ -1,11 +1,9 @@
 package Azure::Storage::Blob::Client::Call::ListBlobs;
-use Moose;
-use Azure::Storage::Blob::Client::Meta::Attribute::Custom::Trait::URIParameter;
-use Azure::Storage::Blob::Client::Meta::Attribute::Custom::Trait::HeaderParameter;
+use Moo;
 use XML::LibXML;
 
 has operation => (is => 'ro', init_arg => undef, default => 'ListBlobs');
-has endpoint_base => (is => 'ro', isa => 'Str', required => 1);
+has endpoint_base => (is => 'ro', required => 1);
 has endpoint => (is => 'ro', init_arg => undef, lazy => 1, default => sub {
   my $self = shift;
   return sprintf(
@@ -18,13 +16,34 @@ has method => (is => 'ro', init_arg => undef, default => 'GET');
 
 with 'Azure::Storage::Blob::Client::Call';
 
-has account_name => (is => 'ro', isa => 'Str', required => 1);
-has api_version => (is => 'ro', isa => 'Str', traits => ['HeaderParameter'], header_name => 'x-ms-version', required => 1);
-has container => (is => 'ro', isa => 'Str', required => 1);
-has prefix => (is => 'ro', isa => 'Str', traits => ['URIParameter'], required => 1);
-has maxresults => (is => 'ro', isa => 'Str', traits => ['URIParameter'], required => 0);
-has marker => (is => 'ro', isa => 'Str', traits => ['URIParameter'], required => 0);
-has auto_retrieve_paginated_results => (is => 'ro', isa => 'Bool', default => 0);
+has account_name => (is => 'ro', required => 1);
+has api_version => (is => 'ro', required => 1);
+has container => (is => 'ro', required => 1);
+has prefix => (is => 'ro', required => 1);
+has maxresults => (is => 'ro', required => 0);
+has marker => (is => 'ro', required => 0);
+has auto_retrieve_paginated_results => (is => 'ro', default => 0);
+
+sub serialize_uri_parameters {
+  my $self = shift;
+  my %params = ();
+  $params{prefix} = $self->prefix if defined $self->prefix;
+  $params{maxresults} = $self->maxresults if defined $self->maxresults;
+  $params{marker} = $self->marker if defined $self->marker;
+  return \%params;
+}
+
+sub serialize_header_parameters {
+  my $self = shift;
+  return {
+    'x-ms-version' => $self->api_version,
+  };
+}
+
+sub serialize_body_parameters {
+  my $self = shift;
+  return {};
+}
 
 sub parse_response {
   my ($self, $response) = @_;
@@ -39,7 +58,5 @@ sub parse_response {
       : (),
   };
 }
-
-__PACKAGE__->meta->make_immutable();
 
 1;
